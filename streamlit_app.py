@@ -187,7 +187,7 @@ with col1:
 with col2:
    st.metric("Straight (0)", straight, f"{straight/total*100:.1f}%" if total else "0%")
 with col3:
-    st.metric("Decider (1)", decider, f\"{decider/total*100:.1f}%\" if total else "0%")
+ st.metric("Decider (1)", decider, f"{decider/total*100:.1f}%" if total else "0%")
 
 # --- Colonne à copier ---
 st.subheader("📋 COPIER ICI")
