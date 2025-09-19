@@ -23,7 +23,7 @@ if data.columns.duplicated().any():
     data.columns = pd.io.parsers.ParserBase({'names': data.columns})._maybe_dedup_names(data.columns)
 
 # Détection colonne score
-score_cols = [col for col in data.columns if any(word in str(col).lower() for word in ['score', 'resultat', 'result', 'score'])]
+score_cols = [col for col in data.columns if any(word in str(col).lower() for word in ['score', 'resultat', 'result'])]
 if score_cols:
     score_col = score_cols[0]
 else:
@@ -68,31 +68,23 @@ def robust_classifier(score_str, tournament_name=None):
     num_sets = len(unique_sets)
     is_grand_slam = tournament_name in grand_slam_names if tournament_name else False
 
+    # 🔹 Règle explicite Grand Chelem BO5
     if is_grand_slam:
         if num_sets in [3, 4]:
-            return 0
+            return 0  # Straight sets
         elif num_sets == 5:
-            return 1
+            return 1  # Decider
+        else:
+            return -1
+
+    # 🔹 Tournois classiques BO3
     else:
         if num_sets == 2:
-            return 0
+            return 0  # Straight sets
         elif num_sets == 3:
-            return 1
-
-    # Dernier recours : analyse des tirets
-    dash_count = score_str.count('-')
-    if is_grand_slam:
-        if dash_count in [3, 4]:
-            return 0
-        elif dash_count >= 5:
-            return 1
-    else:
-        if dash_count == 2:
-            return 0
-        elif dash_count >= 3:
-            return 1
-
-    return -1
+            return 1  # Decider
+        else:
+            return -1
 
 # Appliquer classifier avec ou sans tournoi
 if tournament_col:
