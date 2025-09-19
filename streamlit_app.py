@@ -173,7 +173,9 @@ display_cols += ['Sets_Count', 'Straight_Decider']
 
 # enlever les colonnes qui pourraient ne pas exister après renaming
 display_cols = [c for c in display_cols if c in debug_df.columns]
-st.dataframe(debug_df[display_cols], use_container_width=True)
+df_display = debug_df[display_cols]
+df_display = df_display.loc[:, ~df_display.columns.duplicated()]
+st.dataframe(df_display, use_container_width=True)
 
 # --- Stats ---
 st.subheader("📊 Résultats")
