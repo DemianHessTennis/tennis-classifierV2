@@ -18,6 +18,10 @@ elif data_text:
 else:
     st.stop()
 
+# 🔹 Correction: rendre les colonnes uniques si doublons
+if data.columns.duplicated().any():
+    data.columns = pd.io.parsers.ParserBase({'names': data.columns})._maybe_dedup_names(data.columns)
+
 # Détection colonne score
 score_cols = [col for col in data.columns if any(word in str(col).lower() for word in ['score', 'resultat', 'result', 'score'])]
 if score_cols:
@@ -105,10 +109,9 @@ debug_df['Score_Clean'] = debug_df[score_col].apply(lambda x: str(x))
 debug_df['Sets_Count'] = debug_df[score_col].apply(
     lambda x: len(re.findall(r'(\d+-\d+(?:\s*\(\d+\))?|\d+-\d+)', str(x)))
 )
-display_cols = [score_col]
-if tournament_col:
-    display_cols.append(tournament_col)
-display_cols += ['Sets_Count', 'Straight_Decider']
+
+# 🔹 Correction : éviter doublons
+display_cols = list(dict.fromkeys([score_col] + ([tournament_col] if tournament_col else []) + ['Sets_Count', 'Straight_Decider']))
 st.dataframe(debug_df[display_cols], use_container_width=True)
 
 # STATS
