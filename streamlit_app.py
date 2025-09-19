@@ -52,13 +52,21 @@ def robust_classifier(score_str, tournament_name=None):
     # Extraire les sets : ex. 7-6(5), 6-3, 0-6
     set_pattern = r'\d+-\d+(?:\(\d+\))?'
     all_sets = re.findall(set_pattern, score_str)
-
     num_sets = len(all_sets)
-    is_grand_slam = tournament_name in grand_slam_names if tournament_name else False
 
+    # Normalisation du tournoi
+    is_grand_slam = False
+    if tournament_name:
+        t_name = str(tournament_name).lower().strip()
+        for gs in grand_slam_names:
+            if gs.lower() in t_name:
+                is_grand_slam = True
+                break
+
+    # Règles spécifiques
     if is_grand_slam:
         if num_sets in [3, 4]:
-            return 0  # Straight
+            return 0  # Straight (même si 4 sets)
         elif num_sets == 5:
             return 1  # Decider
     else:
