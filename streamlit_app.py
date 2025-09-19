@@ -185,7 +185,7 @@ decider = int((data['Straight_Decider'] == 1).sum())
 with col1:
     st.metric("Total", total)
 with col2:
-    st.metric("Straight (0)", straight, f\"{straight/total*100:.1f}%\" if total else "0%")
+   st.metric("Straight (0)", straight, f"{straight/total*100:.1f}%" if total else "0%")
 with col3:
     st.metric("Decider (1)", decider, f\"{decider/total*100:.1f}%\" if total else "0%")
 
